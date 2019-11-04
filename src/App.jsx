@@ -21,7 +21,20 @@ function App() {
 
   const expenseTypes = ['Food', 'Entertainment', 'Bills', 'Savings', 'Coffee']
 
-  const handleSubmit = () => {}
+  const handleSubmit = async e => {
+    e.preventDefault()
+    if (textAmount) {
+      let expense = {
+        amount: parseFloat(textAmount),
+        note: newNote,
+        type: selectedType
+      }
+
+      setExpenses(prev => {
+        return [...prev, expense]
+      })
+    }
+  }
 
   return (
     <div className="App">
