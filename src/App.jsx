@@ -6,6 +6,7 @@ import axios from 'axios'
 import ExpenseSummary from './components/ExpenseSummary'
 import ExpenseList from './components/ExpenseList'
 import Total from './components/Total'
+import CONFIG from './config'
 
 function App() {
   const [selectedType, setSelectedType] = useState('Food')
@@ -17,9 +18,19 @@ function App() {
   useEffect(() => {
     M.AutoInit()
     M.updateTextFields()
+    loadExpenseFromAPI()
   }, [])
 
   const expenseTypes = ['Food', 'Entertainment', 'Bills', 'Savings', 'Coffee']
+
+  const addExpenseToApi = async expense => {
+    const resp = await axios.post(CONFIG.API_URL + '/expense', expense)
+    if (resp.status === 200) {
+      expense.id = resp.data.id
+      expense.when = resp.data.when
+    }
+    return expense
+  }
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -29,10 +40,17 @@ function App() {
         note: newNote,
         type: selectedType
       }
-
+      expense = await addExpenseToApi(expense)
       setExpenses(prev => {
         return [...prev, expense]
       })
+    }
+  }
+
+  const loadExpenseFromAPI = async () => {
+    const resp = await axios.get(CONFIG.API_URL + '/expense')
+    if (resp.status === 200) {
+      setExpenses(resp.data)
     }
   }
 
