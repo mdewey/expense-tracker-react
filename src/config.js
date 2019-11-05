@@ -1,5 +1,5 @@
 const production = {
-  API_URL: ''
+  API_URL: 'https://sdg-expense-api.herokuapp.com/api'
 }
 
 const development = {
